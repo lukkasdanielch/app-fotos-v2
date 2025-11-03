@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App Fotos - Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App de Fotos da Oficina</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="firebase.js"></script>
 </head>
 <body>
-  <h1>Login</h1>
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="senha" placeholder="Senha" required><br>
-    <button type="submit">Entrar</button>
-  </form>
-  <p id="mensagem"></p>
+<div id="loginDiv">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="senha" placeholder="Senha">
+  <button id="loginBtn">Entrar</button>
+</div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<div id="appDiv" style="display:none;">
+  <h2>Bem-vindo <span id="userEmail"></span></h2>
+  <select id="empresaSelect"></select>
+  <input type="file" id="fileInput" multiple>
+  <button id="uploadBtn">Enviar Fotos</button>
+  <div id="photosContainer"></div>
+  <button id="logoutBtn">Sair</button>
+</div>
 
-  <!-- Nosso código -->
-  <script src="app.js"></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
