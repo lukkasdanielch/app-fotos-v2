@@ -1,96 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App de Fotos da Oficina</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h2 {
-            text-align: center;
-        }
-        form {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 1em;
-        }
-        #preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-        .preview-image-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-        }
-        .preview-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .remove-image-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 20px;
-            height: 20px;
-        }
-        #upload-form {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Fotos - Login</title>
 </head>
 <body>
+  <h1>Login</h1>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="senha" placeholder="Senha" required><br>
+    <button type="submit">Entrar</button>
+  </form>
+  <p id="mensagem"></p>
 
-    <!-- LOGIN -->
-    <form id="login-form">
-        <h2>Login</h2>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-    </form>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-    <!-- UPLOAD DE FOTOS -->
-    <form id="upload-form">
-        <h2>Upload de Fotos</h2>
-        <input type="text" id="car-name" placeholder="Nome do carro" required>
-        <select id="photo-stage" required>
-            <option value="">Selecione a etapa</option>
-            <option value="Entrada">Entrada</option>
-            <option value="Reparo">Reparo</option>
-            <option value="Finalizado">Finalizado</option>
-        </select>
-        <input type="file" id="camera-upload" accept="image/*" capture="camera">
-        <input type="file" id="gallery-upload" accept="image/*" multiple>
-        <div id="preview-container">
-            <p>Nenhuma foto selecionada.</p>
-        </div>
-        <button type="submit" id="submit-button" disabled>Enviar Fotos</button>
-    </form>
-
-    <!-- SCRIPT APP.JS -->
-    <script type="module" src="app.js"></script>
+  <!-- Nosso código -->
+  <script src="app.js"></script>
 </body>
 </html>
