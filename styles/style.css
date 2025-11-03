@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 2rem;
+    background: #f7f7f7;
+}
+
+input, button {
+    display: block;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    width: 300px;
+}
+
+#preview img {
+    max-width: 100px;
+    margin: 5px;
+}
