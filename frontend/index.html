@@ -15,6 +15,13 @@
 
   <input type="file" id="fileInput">
   <button onclick="upload()">Enviar Foto</button>
+  <div id="upload" style="display:none;">
+  <h2>Upload de Fotos</h2>
+  <p>Usuário: <span id="user"></span></p>
+  <input type="text" id="empresa" placeholder="Nome da empresa" required />
+  <input type="file" id="foto" accept="image/*" />
+  <button onclick="enviarFoto()">Enviar</button>
+</div>
 
   <script src="app.js"></script>
 </body>

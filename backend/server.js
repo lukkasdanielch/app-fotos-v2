@@ -1,46 +1,79 @@
-const express = require('express');
-const { google } = require('googleapis');
-const fileUpload = require('express-fileupload');
-const fs = require('fs');
+import express from "express";
+import multer from "multer";
+import { google } from "googleapis";
+import fs from "fs";
+import cors from "cors";
 
 const app = express();
-app.use(fileUpload());
+app.use(cors());
+app.use(express.json());
 
-// Configuração OAuth2 (Drive)
-const CLIENT_ID = 'SEU_CLIENT_ID';
-const CLIENT_SECRET = 'SEU_CLIENT_SECRET';
-const REDIRECT_URI = 'http://localhost:5500/oauth2callback.html';
-const REFRESH_TOKEN = 'SEU_REFRESH_TOKEN';
+// Configuração de upload local
+const upload = multer({ dest: "uploads/" });
 
-const oauth2Client = new google.auth.OAuth2(
-  CLIENT_ID,
-  CLIENT_SECRET,
-  REDIRECT_URI
-);
-oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+// Autenticação Google Drive
+const auth = new google.auth.GoogleAuth({
+  keyFile: "credentials.json",
+  scopes: ["https://www.googleapis.com/auth/drive.file"]
+});
+const drive = google.drive({ version: "v3", auth });
 
-const drive = google.drive({ version: 'v3', auth: oauth2Client });
-
-app.post('/upload', async (req, res) => {
+// Endpoint para upload de fotos
+app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    const file = req.files.file;
+    const { empresa } = req.body;
 
-    const response = await drive.files.create({
-      requestBody: {
-        name: file.name,
-        parents: ['ID_DA_PASTA_DA_EMPRESA']
-      },
-      media: {
-        mimeType: file.mimetype,
-        body: fs.createReadStream(file.tempFilePath)
-      }
+    // Verifica se há pasta da empresa no Drive
+    const folderName = empresa || "Fotos";
+    const folderList = await drive.files.list({
+      q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder'`,
+      fields: "files(id, name)"
     });
 
-    res.send({ status: 'success', fileId: response.data.id });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao enviar arquivo');
+    let folderId;
+    if (folderList.data.files.length > 0) {
+      folderId = folderList.data.files[0].id;
+    } else {
+      // Cria nova pasta
+      const folder = await drive.files.create({
+        requestBody: {
+          name: folderName,
+          mimeType: "application/vnd.google-apps.folder"
+        },
+        fields: "id"
+      });
+      folderId = folder.data.id;
+    }
+
+    // Faz upload do arquivo
+    const fileMetadata = {
+      name: req.file.originalname,
+      parents: [folderId]
+    };
+
+    const media = {
+      mimeType: req.file.mimetype,
+      body: fs.createReadStream(req.file.path)
+    };
+
+    const response = await drive.files.create({
+      requestBody: fileMetadata,
+      media: media,
+      fields: "id, name, webViewLink"
+    });
+
+    // Apaga arquivo temporário local
+    fs.unlinkSync(req.file.path);
+
+    res.json({
+      success: true,
+      link: response.data.webViewLink
+    });
+  } catch (error) {
+    console.error("Erro ao enviar:", error);
+    res.status(500).send("Erro ao enviar para o Google Drive");
   }
 });
 
-app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
+// Inicia servidor
+app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000"));
